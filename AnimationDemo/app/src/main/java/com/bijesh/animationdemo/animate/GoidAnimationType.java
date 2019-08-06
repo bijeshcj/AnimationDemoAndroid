@@ -6,5 +6,6 @@ package com.bijesh.animationdemo.animate;
 public enum GoidAnimationType {
     SHOW_CIRCLE_CENTER,
     SHOW_VERFIER_LOGO,
-    MOVE_VERIFIER_LOGO_UP
+    MOVE_VERIFIER_LOGO_UP,
+    VERIFIER_LOGO_UP_WITH_SMALL_CIRCLE
 }

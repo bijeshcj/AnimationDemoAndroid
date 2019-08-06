@@ -19,6 +19,8 @@ import com.bijesh.animationdemo.animate.GoidAnimationType;
 import com.bijesh.animationdemo.indrive.animations.AnimationType;
 import com.bijesh.animationdemo.indrive.animations.TutorialPoint;
 
+import static com.bijesh.animationdemo.animate.GoidAnimationType.VERIFIER_LOGO_UP_WITH_SMALL_CIRCLE;
+
 
 /**
  * Created by Bijesh C J on 05,August,2019
@@ -112,9 +114,21 @@ public class MyView extends View {
             case MOVE_VERIFIER_LOGO_UP:{
                 moveVerifier(canvas,verfier_logo,new AnimatePoint(mWidth/2,mHeight/2),mMoveVerifierUpPoints);
                 break;
+            }case VERIFIER_LOGO_UP_WITH_SMALL_CIRCLE:{
+                verifierWithSmalCircle(canvas,verfier_logo);
+                break;
             }
         }
 
+    }
+
+    private void verifierWithSmalCircle(Canvas canvas,BitmapDrawable img){
+         AnimatePoint animatePoint = mMoveVerifierUpPoints[mMoveVerifierUpPoints.length-1];
+         canvas.drawBitmap(img.getBitmap(),animatePoint.x,animatePoint.y,null);
+         canvas.drawCircle(animatePoint.x+(img.getBitmap().getWidth()/2),animatePoint.y + (img.getBitmap().getHeight() * 1.15f),25f,getMarkerPaint(true));
+         System.out.println("animatePoint.x "+animatePoint.x+" animatePoint.y "+animatePoint.y+ " img.getBitmap().getWidth() "+img.getBitmap().getWidth()+
+                 " img.getBitmap().getHeight() "+img.getBitmap().getHeight()+" drawn at "+(img.getBitmap().getWidth()+animatePoint.x)+ " and "+
+                 (img.getBitmap().getHeight()+animatePoint.y));
     }
 
     private void moveVerifier(Canvas canvas, BitmapDrawable img, AnimatePoint startPoint, AnimatePoint[] points) {
@@ -126,6 +140,12 @@ public class MyView extends View {
         }
         if(handCounter < getIterationLength(points)){
             mHandler.postDelayed(gotoNavigation,FRAME_RATE_MOVE_UP);
+        }else if(handCounter >= getIterationLength(points)){
+            mAnimationType = VERIFIER_LOGO_UP_WITH_SMALL_CIRCLE;
+            invalidate();
+//            AnimatePoint endPoint = points[getIterationLength(points)-1];
+//            canvas.drawCircle(img.getBitmap().getWidth(),img.getBitmap().getHeight(),25f,getMarkerPaint(true));
+//            canvas.drawCircle(img.getBitmap());
         }
 //        if (mCounter < getIterationLength(mDragHandToNavigationDrawer)) {
 ////            block which draws shape
