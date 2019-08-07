@@ -19,6 +19,7 @@ import com.bijesh.animationdemo.animate.GoidAnimationType;
 import com.bijesh.animationdemo.indrive.animations.AnimationType;
 import com.bijesh.animationdemo.indrive.animations.TutorialPoint;
 
+import static com.bijesh.animationdemo.animate.GoidAnimationType.MOVE_CIRCLE_DOWN;
 import static com.bijesh.animationdemo.animate.GoidAnimationType.VERIFIER_LOGO_UP_WITH_SMALL_CIRCLE;
 
 
@@ -35,11 +36,12 @@ public class MyView extends View {
     private GoidAnimationType mAnimationType = GoidAnimationType.SHOW_CIRCLE_CENTER;
     private int mWidth = this.getResources().getDisplayMetrics().widthPixels;
     private int mHeight = this.getResources().getDisplayMetrics().heightPixels;
-    private int handCounter = 0;
+    private int handCounter = 0,moveDownCircleCounter=0;
     private BitmapDrawable verfier_logo,verfier_circle;
     private boolean isPointsInit = false;
-    private AnimatePoint[] mMoveVerifierUpPoints;
+    private AnimatePoint[] mMoveVerifierUpPoints,circleMoveDownPoints;
     private static final int FRAME_RATE = 5,FRAME_RATE_MOVE_UP = 1;
+    private float newPointx , newPointy;
 
     public MyView(Context context) {
         super(context);
@@ -95,6 +97,8 @@ public class MyView extends View {
 
     private void initPoints(){
         mMoveVerifierUpPoints = AnimationUtils.getVerifierUpwardMovementPoints(mWidth/2,mHeight/2);
+        circleMoveDownPoints = AnimationUtils.getCircleDownwardMovementPoints(mMoveVerifierUpPoints[mMoveVerifierUpPoints.length-1].x,
+                mMoveVerifierUpPoints[mMoveVerifierUpPoints.length-1].y);
         isPointsInit = true;
     }
 
@@ -115,21 +119,80 @@ public class MyView extends View {
                 moveVerifier(canvas,verfier_logo,new AnimatePoint(mWidth/2,mHeight/2),mMoveVerifierUpPoints);
                 break;
             }case VERIFIER_LOGO_UP_WITH_SMALL_CIRCLE:{
-                verifierWithSmalCircle(canvas,verfier_logo);
+                verifierWithSmalCircle(canvas,verfier_logo,circleMoveDownPoints);
+                break;
+            }case MOVE_CIRCLE_DOWN:{
+                moveLineWithCircleDownward(canvas,verfier_logo,circleMoveDownPoints);
                 break;
             }
         }
 
     }
+    private boolean renderCirlceOnTop = true;
+    private void moveLineWithCircleDownward(Canvas canvas,BitmapDrawable img,AnimatePoint[] points){
+        AnimatePoint animatePoint = mMoveVerifierUpPoints[mMoveVerifierUpPoints.length-1];
+        float circleX = (animatePoint.x+(img.getBitmap().getWidth()/2));
+        float circleY = (animatePoint.y + (img.getBitmap().getHeight() * 1.15f))-25;
+        canvas.drawBitmap(img.getBitmap(),animatePoint.x,animatePoint.y,null);
+        if(renderCirlceOnTop)
+           canvas.drawCircle(circleX,circleY,25f,getMarkerPaint(true));
 
-    private void verifierWithSmalCircle(Canvas canvas,BitmapDrawable img){
+        if(moveDownCircleCounter < getIterationLength(points) && moveDownCircleCounter == 0){
+            AnimatePoint animatePoint1 = getShapePoints(points,moveDownCircleCounter);
+            canvas.drawLine(circleX,circleY,circleX,circleY,getMarkerPaint(true));
+            canvas.drawCircle(circleX,circleY,25f,getMarkerPaint(true));
+            moveDownCircleCounter++;
+            newPointx = circleX - 5;
+            newPointy = circleY - 5;
+            renderCirlceOnTop = false;
+            invalidate();
+        }else if(moveDownCircleCounter < getIterationLength(points)){
+            canvas.drawLine(circleX,circleY,circleX,newPointy,getMarkerPaint(true));
+            canvas.drawCircle(circleX,newPointy,25f,getMarkerPaint(true));
+            moveDownCircleCounter++;
+//             newPointx = newPointx - 5;
+            newPointy = newPointy + 5;
+            renderCirlceOnTop = false;
+            invalidate();
+        }else{
+            canvas.drawLine(circleX,circleY,circleX,newPointy,getMarkerPaint(true));
+            canvas.drawCircle(circleX,newPointy+25,25f,getMarkerPaint(true));
+            canvas.drawBitmap(img.getBitmap(),animatePoint.x,newPointy,null);
+            renderCirlceOnTop = false;
+        }
+    }
+
+
+
+    private void verifierWithSmalCircle(Canvas canvas,BitmapDrawable img, AnimatePoint[] points){
          AnimatePoint animatePoint = mMoveVerifierUpPoints[mMoveVerifierUpPoints.length-1];
+         float circleX = animatePoint.x+(img.getBitmap().getWidth()/2);
+         float circleY = animatePoint.y + (img.getBitmap().getHeight() * 1.15f);
          canvas.drawBitmap(img.getBitmap(),animatePoint.x,animatePoint.y,null);
-         canvas.drawCircle(animatePoint.x+(img.getBitmap().getWidth()/2),animatePoint.y + (img.getBitmap().getHeight() * 1.15f),25f,getMarkerPaint(true));
+         canvas.drawCircle(circleX,circleY,25f,getMarkerPaint(true));
+         mAnimationType = MOVE_CIRCLE_DOWN;
+         invalidate();
+//         if(moveDownCircleCounter < getIterationLength(points) && moveDownCircleCounter == 0){
+//             AnimatePoint animatePoint1 = getShapePoints(points,moveDownCircleCounter);
+//             canvas.drawLine(circleX,circleY,circleX,circleY,getMarkerPaint(true));
+//             moveDownCircleCounter++;
+//             newPointx = circleX - 5;
+//             newPointy = circleY - 5;
+//             invalidate();
+//         }else if(moveDownCircleCounter < getIterationLength(points)){
+//             canvas.drawLine(circleX,circleY,circleX,newPointy,getMarkerPaint(true));
+//             moveDownCircleCounter++;
+////             newPointx = newPointx - 5;
+//             newPointy = newPointy + 5;
+//             invalidate();
+//         }
+//         canvas.drawLine(circleX,circleY,circleX,circleY+300f,getMarkerPaint(true));
          System.out.println("animatePoint.x "+animatePoint.x+" animatePoint.y "+animatePoint.y+ " img.getBitmap().getWidth() "+img.getBitmap().getWidth()+
                  " img.getBitmap().getHeight() "+img.getBitmap().getHeight()+" drawn at "+(img.getBitmap().getWidth()+animatePoint.x)+ " and "+
                  (img.getBitmap().getHeight()+animatePoint.y));
     }
+
+
 
     private void moveVerifier(Canvas canvas, BitmapDrawable img, AnimatePoint startPoint, AnimatePoint[] points) {
         if (handCounter < getIterationLength(points)) {
