@@ -134,6 +134,8 @@ public class MyView extends View {
 
     }
 
+    private boolean isAnimate = true;
+    private float animatePointY;
     private void verifierDownWithSmalCircle(Canvas canvas,BitmapDrawable img, AnimatePoint[] points){
         AnimatePoint animatePoint = mMoveVerifierUpPoints[mMoveVerifierUpPoints.length-1];
         float circleX = animatePoint.x+(img.getBitmap().getWidth()/2);
@@ -142,6 +144,22 @@ public class MyView extends View {
         canvas.drawLine(circleX,circleY-25f,circleX,newPointy,getMarkerPaint(true,true));
         canvas.drawCircle(circleX,newPointy-25,25f,getMarkerPaint(true,false));
         canvas.drawBitmap(img.getBitmap(),animatePoint.x,newPointy,null);
+
+        if(isAnimate){
+            if(circleY < animatePointY)
+              canvas.drawCircle(circleX,animatePointY,25f,getMarkerPaint(true,false));
+            if(circleY < animatePointY-70f)
+             canvas.drawCircle(circleX,animatePointY-70f,25f,getMarkerPaint(true,false));
+            if(circleY < animatePointY-140f)
+              canvas.drawCircle(circleX,animatePointY-140f,25f,getMarkerPaint(true,false));
+            if(circleY < animatePointY-210f)
+              canvas.drawCircle(circleX,animatePointY-210f,25f,getMarkerPaint(true,false));
+            animatePointY = animatePointY - 5f;
+            if(animatePointY == circleY)
+                isAnimate = false;
+            invalidate();
+        }
+
     }
 
     private void moveLineWithCircleDownward(Canvas canvas,BitmapDrawable img,AnimatePoint[] points){
@@ -174,6 +192,7 @@ public class MyView extends View {
             canvas.drawCircle(circleX,newPointy+25,25f,getMarkerPaint(true,false));
             canvas.drawBitmap(img.getBitmap(),animatePoint.x,newPointy,null);
             renderCirlceOnTop = false;
+            animatePointY = newPointy -25f;
             mAnimationType = VERIFIER_LOGO_DOWN_WITH_SMALL_CIRCLE;
             invalidate();
         }
