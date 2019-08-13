@@ -10,7 +10,21 @@
         android:scaleType="center"
         />-->
 
-    <com.bijesh.animationdemo.samples.MyView
+   <!-- <com.bijesh.animationdemo.samples.MyView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/anim"
+        android:scaleType="center"
+        />-->
+
+   <!-- <com.bijesh.animationdemo.samples.VerifierAnimationView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/anim"
+        android:scaleType="center"
+        />-->
+
+    <com.bijesh.animationdemo.samples.RippleEffect
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/anim"

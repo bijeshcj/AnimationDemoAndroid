@@ -26,7 +26,7 @@ import static com.bijesh.animationdemo.animate.GoidAnimationType.VERIFIER_LOGO_U
 /**
  * Created by Bijesh C J on 05,August,2019
  */
-public class MyView extends View {
+public class VerifierAnimationView extends View {
 
 
     private static final String COLOR_HEX = "#E74300";
@@ -46,23 +46,23 @@ public class MyView extends View {
     private Canvas mRippleCanvas;
     private Bitmap mVerifierRippleLogo;
 
-    public MyView(Context context) {
+    public VerifierAnimationView(Context context) {
         super(context);
         // start the animation:
 
     }
 
-    public MyView(Context context,  AttributeSet attrs) {
+    public VerifierAnimationView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public MyView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public VerifierAnimationView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    public MyView(Context context,  AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public VerifierAnimationView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
